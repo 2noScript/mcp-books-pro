@@ -11,8 +11,22 @@ class Endpoint {
     );
 
 
+    async run(task:(page:any)=>Promise<any>) {
+        return worker.runTask(task,{
+            headless:true,
+            executablePath:"/Users/2noscript/workspace/mcp-server/mcp-books-pro/browser/camoufox/Camoufox.app/Contents/MacOS/camoufox",
+
+        })
+    }
+
+    async info(supplier:Suppliers) {
+        return this.run(async (page) => {
+            return await this.store[supplier].crawl(page);
+        });
+    }
+
     async getTop(supplier:Suppliers ) {
-        return worker.runTask((async page =>{
+        return this.run((async page =>{
             return await this.store[supplier].getTop(page) 
         }))
     }
@@ -24,7 +38,7 @@ class Endpoint {
     }
 
     async getFavorite(supplier:Suppliers) {
-        return worker.runTask((async page =>{
+        return this.run((async page =>{
             return await this.store[supplier].getFavorite(page) 
         }))
     }
